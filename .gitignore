@@ -1,0 +1,24 @@
+# Compiled executables and objects
+*.exe
+*.out
+*.o
+*.obj
+
+# CUDA build artifacts
+*.cubin
+*.fatbin
+*.ptx
+
+# Build output
+build/
+cmake-build-*/
+
+# Temporary logs
+*.tmp
+*.log
+
+# Editor / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
