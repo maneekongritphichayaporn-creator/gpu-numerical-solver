@@ -150,3 +150,39 @@ Potential next steps include:
 - Expand experiments to larger matrices and additional sparsity patterns.
 
 The objective is to make performance improvements measurable, reproducible, and supported by numerical correctness checks.
+
+## Experiment 2: CUDA CG Block-Size Tuning
+
+### Setup
+
+- GPU: NVIDIA Tesla T4
+- Matrix: Tridiagonal CSR
+- Matrix size: N = 1,000,000
+- Non-zero elements: 2,999,998
+- CG iterations: 20
+- Warm-up runs: 2 per configuration
+- Measured runs: 10 per configuration
+- Independent benchmark executions: 3
+
+### Results
+
+| Configuration | SpMV Block | Dot Block | Average of Medians (ms) | Improvement |
+| ------------- | ---------: | --------: | ----------------------: | ----------: |
+| Baseline      |        256 |       256 |                 29.4713 |       0.00% |
+| SpMV-only     |        512 |       256 |                 29.2179 |       0.86% |
+| Dot-only      |        256 |       128 |                 28.7926 |       2.30% |
+| Combined      |        512 |       128 |                 28.7984 |       2.28% |
+
+### Correctness
+
+All four configurations passed the numerical correctness checks for the tested problem.
+
+The displayed residual and maximum error were rounded to nine decimal places. They should not be interpreted as proof that the underlying floating-point values were exactly zero.
+
+### Preliminary Conclusion
+
+The Dot-only configuration achieved the lowest average of medians across three independent benchmark executions, reducing runtime by approximately 2.30% relative to the baseline.
+
+Increasing the SpMV block size from 256 to 512 provided a smaller improvement. Combining both changes did not outperform the Dot-only configuration in this experiment.
+
+These results are preliminary and specific to the tested GPU, matrix, and implementation. Further profiling is needed to identify the main runtime bottlenecks.
